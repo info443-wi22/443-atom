@@ -1,4 +1,4 @@
-# INFO 443 Project - Atom
+# INFO 443 Project - Atom 
 by Yilin Chen, Jossie Choi, Debbie Dai and Stephan Rubalcava
 ## Brief Description
 ### What is the software system, and what does it do? Give a short (a few sentences is fine) explanation from a user/consumer perspective.
