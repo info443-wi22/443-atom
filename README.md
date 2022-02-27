@@ -22,3 +22,11 @@ It provides packageManager interface to Menu and Text Editor. And it requires gr
 
 ### Codeline Model
 (TBC...)
+
+
+## Styles & Patterns
+ 1. Singleton: 485  
+    Context: As a markdown editor, users will likely open multiple different files at once with Atom, this will mean launching multiple different instances of Atom.
+    Problem: Launching multiple separate instances of Atom will be very intensive system resources and doesn't make sense to do once Atom has already been initialized once. Therefore, going through the whole start-up process each time does not make sense.
+    Solution: Make the Atom process act as a singleton.
+    The function at line 485 creates a local server to listen for other Atom launches on the device, if another instance is launched, they will pass all of their data to the first instance and then close, in effect merging the two. Although not a conventional implementation of the Singleton pattern, which normally uses variables to track if it has already been instantiated. This function in effect makes the Atom instance a singleton by closing all other instances of itself and taking on their data before they have gotten too far in the startup process.
