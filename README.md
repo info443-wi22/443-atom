@@ -8,10 +8,11 @@ Mainly Developed by GitHub, Atom is a desktop application built using web techno
 
 You can find more information about the overall structure of Atom at [Atom and Packages](https://github.com/atom/atom/blob/master/CONTRIBUTING.md) and more details at [Atom Flight Manual](https://flight-manual.atom.io/). And [atom/atom](https://github.com/atom/atom) is the repository we claim to analyze.
 
- ## Development View
+## Development View
 atom/atom is the core repository that responsible for basic text editing.
 
 <img src="img/UML_Component_Diagram.jpeg" alt="UML Diagram" width=50% height=50%>
+
 <em>Figure 1: UML Component Diagram</em>
 <p>&nbsp;</p>
 
@@ -28,6 +29,30 @@ It has a detailed README.md for for the mian repository but lack explaination fo
 
 (TBC...)
 
+## Applied Perspective
+In this project, we will be focusing on **Usability Perspective** when analyzing the architecture of Atom. 
+
+The desired quality of Usability Perspective is “the ease with which people who interact with the system can work effectively". (Rozenski)
+
+If you are an UI/UX designer, this may seem crazy to you that software architecture also has to consider Usability, not from a human interaction design perspective that focus on the User Interfaces where people see on the front-end, but mainly focus on the ease of user and developer (including people who maintain the system) to interact with the system architecture effectively that contribute to the usability of the overall system. 
+
+### Concerns
+<ul>
+<li>The first concern relevant to Atom system architecture is how well the <strong>perceived usability</strong> is. The instances we will be focusing on for this concern is the use of asynchronous operation of the system because for code editor like Atom, we want the use to: 1. receive the transactions returned before it has completed in the database, “providing significant improvements in observed response time”. (Rozenski) 2. operate local systems that continue in offline mode, meaning that users are able to use the editor even if the network is off. </li>
+<li>Furthermore, not only for Atom but most software systems need to consider how easy it is for changing the user interfaces because according to Rozenski, “<strong>the difficulty of changing user interfaces</strong> can impact system’s usability”. To make changing the UI easier, we need to consider if the Atom system has a modification friendly architecture so the developers and maintainers could easily make routine modifications based on user feedback, especially Atom is maintained by the Gtihub community, so it is crucial to evaluate how ease for the community to change the UI on Atom system. </li>
+<li>The third perspective we will consider in the Atom system is the <strong>simple process flow</strong>. Since Atom involves different types of users, including companies, developers, students, etc. that are doing different tasks, meanwhile each task may involve complex and multiple steps, lile preview, terminal, opening files and folders, coding… Therefore, the “process flow around the system should be simple, understandable, and consistent”. (Rozenski)  By checking the system process flow, we will ensure that Atom is sufficient and straightforward for users to complete the tasks.</li>
+</ul>
+
+### Activities To Apply The Perspective
+<ol>
+<li>Interface evaluation</li>
+Identify places where users interact with the system(maybe using our UML diagram) and how users will interact at this point. 
+Then focusing on the perceived usability concern, specifically how the system return responses to the user and checking for asynchronous working each point if applicable. 
+Understanding the internal system and public interfaces, and how easy it is to modify the user interfaces in the system. 
+<li>Particiatory design</li>
+Understand different user’s capability of using the system and what their needs are. 
+Then based on their needs, find out the simplicity of the process flow for different users.
+</ol>
 
 ## Styles & Patterns
  1. Singleton: 485  
@@ -35,3 +60,9 @@ It has a detailed README.md for for the mian repository but lack explaination fo
     Problem: Launching multiple separate instances of Atom will be very intensive system resources and doesn't make sense to do once Atom has already been initialized once. Therefore, going through the whole start-up process each time does not make sense.
     Solution: Make the Atom process act as a singleton.
     The function at line 485 creates a local server to listen for other Atom launches on the device, if another instance is launched, they will pass all of their data to the first instance and then close, in effect merging the two. Although not a conventional implementation of the Singleton pattern, which normally uses variables to track if it has already been instantiated. This function in effect makes the Atom instance a singleton by closing all other instances of itself and taking on their data before they have gotten too far in the startup process.
+
+
+## References:
+Rozenski, Nick. "Software Systems Architecture: Working with Stakeholders Using Viewpoints and Perspectives." Second Edition, Chapter 29, Addison-Wesly Professional, 2012, https://learning.oreilly.com/library/view/software-systems-architecture/9780132906135/ch29.html
+
+
