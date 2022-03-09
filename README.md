@@ -62,7 +62,7 @@ Then based on their needs, find out the simplicity of the process flow for diffe
 <br>
 
 ## Styles & Patterns
-###Styles
+### Styles
 1.  Pipe and filter: main > Start  > application > initialize application window > Atom-environment
   a. The startup process utilizes the pipe and filter style where the filters are the different classes in the sequence. The chain of startup starts with src/main-process/main.js which gets the values of the resourcePath(where everything is located), devResourcePath(where the github repo is), and the startTime. These values are all piped into to start.js which normalizes them and adds the path of the file that the user is editing, it then pipes the values to atom-application.js. This gets information about the current instance of the application and pipes the information about the current window into multiple files, the main one being src/initialize-application-window.js which uses the data to display the application to the user and is the end of the pipe.
 
@@ -70,7 +70,7 @@ Then based on their needs, find out the simplicity of the process flow for diffe
   a. The main component of the application can be best described as a Model-View-Controller. The model in this instance is the file that is being viewed/edited by the user which is not a part of the core atom system. The view is the process in atom-environent.js, this file is called on by initialize-application-window.js which uses a combination of other files to display all of the components that the user sees when running atom. Finally, the controller is the text editor (text-editor.js) which modifies the text file directly.
   This isn't a pure MVC application because the model is only viewed through the text editor, but atom-environment.js displays the text editor along with other information, so it could be considered the view, but it could go either way.
 
-###Patterns
+### Patterns
 1. Singleton: Atom-Application 485  
   Context: As a markdown editor, users will likely open multiple different files with Atom, this will mean launching multiple different instances of Atom.
 
@@ -99,11 +99,6 @@ Then based on their needs, find out the simplicity of the process flow for diffe
   Problem: In atom text has more properties than just the ascii value of the text being copied, there has a lot more data being transmitted in order for the formatting to be correct.
 
   Solution: An implementation of the factory pattern in the copy() method. This creates a new TextEditor object and stores the copied data in there including any formatting and background information that is needed for it to be properly pasted within another location in atom. This helps the copying and cutting operations have a more consistent output so that the pasting option can work better.
- 1. Singleton: 485  
-    Context: As a markdown editor, users will likely open multiple different files at once with Atom, this will mean launching multiple different instances of Atom.
-    Problem: Launching multiple separate instances of Atom will be very intensive system resources and doesn't make sense to do once Atom has already been initialized once. Therefore, going through the whole start-up process each time does not make sense.
-    Solution: Make the Atom process act as a singleton.
-    The function at line 485 creates a local server to listen for other Atom launches on the device, if another instance is launched, they will pass all of their data to the first instance and then close, in effect merging the two. Although not a conventional implementation of the Singleton pattern, which normally uses variables to track if it has already been instantiated. This function in effect makes the Atom instance a singleton by closing all other instances of itself and taking on their data before they have gotten too far in the startup process.
 
 <br>
 
