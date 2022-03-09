@@ -22,12 +22,17 @@ Menu component, which handles thing in application menu, requires packageManager
 It provides packageManager interface to Menu and Text Editor. And it requires grammarRegistry provided by Grammar component, which contains one or more grammars, and styleManager from Style Component, which can query and observe the set of active styles. Notification is a component that hold notices for instructions and it provide notifivationManager, used to create notifications to be shown to the user, to Package、Pane、and Environment component. The main function of Deserializer component is covert data and paralle interface in both way. Here, it gives out deserializerManager to Package、Pane、and Environment component. Providing paneContainer to Workspce only and requiring viewRegistry from View and applicationDelegate from Delegate, Pane is used to help user spliting the pane for better texting. And paneContainer presents content in the center of the workspace. View deal with the data presentation and interaction from user. And View componet, the viewRegistry handles the connection betweem model and view. It provides viewRegistry to Package、Pane and Workspace. In addtion, Workspace shows the status of window of user interface. Back to View, it receive applicationEnvironment of Environment component that indirectly charge main components like Window, Menu and so on. Except components mentioned before, Environment also provide interface to Window. Window itself presents the open page of Atom. It requires applicationEnvironment of Environment and applicationDelegate of Delegate. Finally Delegate implements events and callbacks like event listener. And it provides applicationDelegate to Pane、Window and Environment. Last but not least, is involves Electron, a framework help to build app, from outside package.
 
 ### Codeline Model
-The names of files and directories are rather descriptive. For example, folder src holds the main source files and spec keeps testing code of basically all components. And file names are easy to understand at a glance since they are named as 'component-status' although files that set up a component cannot be put in a folder.
-However, it allows programmers to use relative paths since all files that call each other to work are put in the same directory.
-And like atom/atom repository, it only contains things to do with core part of basic text editing which means it seperates packages like apm into another and relates by a link to that repository.
-It has a detailed README.md for for the mian repository but lack explaination for other important folders.
+The names of files and directories are rather descriptive. For example, folder src holds the main source files and spec keeps testing code of basically all components. And file names are easy to understand at a glance since they are named as 'component-status' although files that set up a component cannot be extract and put in a folder seperately. However, it allows programmers to use relative paths since all files that call each other to work are put in the same directory.
 
-(TBC...)
+Many functionalities of Atom are achieved by packages. And like atom/atom repository, it only contains things to do with core part of basic text editing which means it seperates packages into other repositories and relates them by links. This approach enables a highly flexible developing approach, where changes in single packages will not affect other functionalities. In addition, Atom allows packages to depend on other packages, substituding the redundancy with simple dependency statement.
+
+It has a detailed README.md for for the main repository but lack explaination for other important folders.
+
+### Testing and Configuration
+The Atom core is tested by about 80 files containing test code, not including the large amount of fixtures used as test cases. These files with test code are again almost entirely bundled into one folder named `spec`, correspond to each component. Atom is tested using the [Jasmine](https://jasmine.github.io/) testing framework. Jasmine is a open-source test framework that can be run on any JavaScript-enabled platform. It has a clean and simple syntax for writing test in spec file and then you just need to make the source file available to spec file. 
+
+And Atom uses Continuous Integration tools like [GitHub Actions](https://github.com/features/actions), [Travis CI](https://travis-ci.org/) and [Appveyor](https://www.appveyor.com/) to do a test build for each new pull request, including running the entire test suite. Pull requests merged almost all by others than pull request initiator, which gurantees the code be checked before merge. 
+
 
 ## Applied Perspective
 In this project, we will be focusing on **Usability Perspective** when analyzing the architecture of Atom. 
@@ -172,7 +177,7 @@ Similarly, we can see that the `Model` class and its subclasses also suffer from
 
 <br>
 
-## References:
+## References
 Rozenski, Nick. "Software Systems Architecture: Working with Stakeholders Using Viewpoints and Perspectives." Second Edition, Chapter 29, Addison-Wesly Professional, 2012, https://learning.oreilly.com/library/view/software-systems-architecture/9780132906135/ch29.html
 
 
