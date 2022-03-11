@@ -107,37 +107,180 @@ Next we assessed the architecture of the Atom project, identfiying instances whe
 
 <br>
 
+<h3>Model In Code Principle</h3>
+The <strong>Model In Code Principle</strong> is exactly what its name suggests. This principle states that the code itself should express the model and reveal the design intent of the component or architecture. One of the ways code may be written to adhere to this principle is with the way that parts of the code is named. Some general guidelines include the following—<strong>classes</strong> should be named with <i>nouns</i>, <strong>attributes</strong> with <i>nouns</i> that <i>describe adjectives</i>, and <strong>methods</strong> with <i>verbs</i> that connect classes.
+
+<br>
+
+Taking a look at the `Package` class mentioned above we can see good examples of the code adhering to this principle. Specifically looking at the way that methods/functions are named, we can see various examples of verbs being utilized in the function names to describe exactly what that particular function does. Common patterns in this particular file include methods named starting with `get` for functions that retrieve some aspect of the application code;
+<pre><code>// lines 527-547
+getKeymapPaths() {
+  const keymapsDirPath = path.join(this.path, 'keymaps');
+  if (this.metadata.keymaps) {
+    return this.metadata.keymaps.map(name =>
+      fs.resolve(keymapsDirPath, name, ['json', 'cson', ''])
+    );
+  } else {
+    return fs.listSync(keymapsDirPath, ['cson', 'json']);
+  }
+}
+
+getMenuPaths() {
+  const menusDirPath = path.join(this.path, 'menus');
+  if (this.metadata.menus) {
+    return this.metadata.menus.map(name =>
+      fs.resolve(menusDirPath, name, ['json', 'cson', ''])
+    );
+  } else {
+    return fs.listSync(menusDirPath, ['cson', 'json']);
+  }
+}
+</code></pre>
+as well as functions starting with `has` for those returning a boolean value indicating whether something is present or not
+<pre><code>// lines 966-983
+hasActivationHooks() {
+  const hooks = this.getActivationHooks();
+  return hooks && hooks.length > 0;
+}
+
+hasWorkspaceOpeners() {
+  const openers = this.getWorkspaceOpeners();
+  return openers && openers.length > 0;
+}
+
+hasActivationCommands() {
+  const object = this.getActivationCommands();
+  for (let selector in object) {
+    const commands = object[selector];
+    if (commands.length > 0) return true;
+  }
+  return false;
+}
+</code></pre>
+These function names describe exactly what they are doing and therefore does not require any other reader to look too deep into the code in order to understand it. This increases the overall ease of use when it comes to maintaining and modifying the existing code. One example of a function whose code does not express the model is the `measure()` function -
+<pre><code> // lines 80-85
+measure(key, fn) {
+  const startTime = window.performance.now();
+  const value = fn();
+  this[key] = Math.round(window.performance.now() - startTime);
+  return value;
+}
+</code></pre>
+While the function name does express that it is measuring something, it does not specify what exactly it is measuring which leads to ambiguity about it's functionality. Looking at the code that utilizes this function, we can see that it is generally used to measure the amount of time a given action takes to be completed/load. This is something that could not be inferred from the function's name itself even looking at the class name.
+
+<br>
+
+and the `Notification` class in `src/notification.js`.
+
+Another portion of the code that adheres to this principle includes the `NotificationManager` class found in `src/notification-manager.js`. Similar to the examples shown with the `Package` class, this class has various methods with names that are very self explanatory and provide insight as to their specific responsibilities. The two most prevalent examples in this class are function names starting with `on` to describe functions that handle callbacks
+<pre><code>// lines 25-27
+onDidAddNotification(callback) {
+  return this.emitter.on('did-add-notification', callback);
+}
+
+// lines 34-36
+onDidClearNotifications(callback) {
+  return this.emitter.on('did-clear-notifications', callback);
+}
+</code></pre>
+and functions with names starting with `add` to describe functions that add notifications to the array
+<pre><code>// lines 94-96
+addInfo(message, options) {
+  return this.addNotification(new Notification('info', message, options));
+}
+
+// lines 122-124
+addWarning(message, options) {
+  return this.addNotification(new Notification('warning', message, options));
+}
+
+// lines 192-196
+addNotification(notification) {
+  this.notifications.push(notification);
+  this.emitter.emit('did-add-notification', notification);
+  return notification;
+}
+</code></pre>
+Zooming out, we can also see how the classes interact with eachother from just their names alone. For example, we can correctly infer that the `NotificationManager` class manages the `Notification` class by collecting the various instances of `Notification` and displaying them and their statuses.
+
+<br>
+
+<h3>Principle of Separation of Concerns</h3>
+The <strong>Principle of Separation of Concerns</strong> states that software should be organized in a way that decreases cohesion and coupling meaning that the elements should be as independent as possible. This principle helps to reduce various anti-patterns from arising in the code.
+
+<br>
+
+Going back to the `NotificationManager` and `Notification` classes, we can say that this small section of the code does adhere to this principle. The separations between these two classes are intentional and work together without the need for inheritance which results in decreased coupling and cohesion. There are no `super()` calls that would result in strong coupling between the two and both classes strictly share the overarching responsbility of handling notifications. Separating the specific concerns related to notification prevents the possibility of any God class/objects in the code. This code smell consists of a class that does or knows too much and is very large with lots of functionality which results in tight coupling and increased cohesion. Although having a manager that instantiates notifications introduces some coupling between the two, the overall structure of these two classes work to decrease any more than is needed.
+
+<br>
+
+We can also see a decent application of separation of concerns with the elements related to the application window panes. Looking at the code in `src`, we can see that the pane functionality is divided over 7 files that define their own classes including `Pane`, `PaneResizeHandleElement`, `PaneElement`, `PaneContainer`, `PaneContainerElement`, `PaneAxis`, and `PaneAxisElement`. Looking at the code for these classes, we can see that the functionality related to window panes of the application have been spread out over a handful of classes leading to smaller, more manageable and somewhat independent classes. Similar to the earlier example, although there is some coupling with some of these smaller modules being used by another, the overall structure results in a separate element/portion which handles all pane-related functionality and separates these concerns from the other code related to different Atom processes and functionality.
+
+<br>
+
 <h3>Open-Closed Principle</h3>
 The <strong>Open-Closed Principle</strong> is the second of the SOLID design principles in object oriented programming and states that classes should be open for extension but closed for modification. By promoting extensibility in this way, we can prevent any errors or bugs from arisiing from adding any new functionality that can come from modifying lower-level components directly.
 
 <br>
 
-One prevalent instance of this principle being adhered to in the Atom project code is the project's use of classes that extend the node.js [`EventEmitter`](https://nodejs.dev/learn/the-nodejs-event-emitter) class. Some notable examples of this include the `AutoUpdater`, `AutoUpdateManager`, `AtomWindow`, and `AtomApplication` classes. By extending upon the `EventEmitter` class, these new classes inherit critical functionality surrounding events while also building upon it and containing their own nuanced functionality specific to their use cases. No direct modifications are ever done to the `EventEmmiter` class itself within each subclass, only extending functionality. Looking at the `AtomApplication` class's `handleEvents()` method specifically, we can see how the class uses the inherited `EventEmitter` methods `.on()` and `.emit()` to handle and trigger various application events within the class.
-<pre><code>/*  src/main-proccess/atom-application.js  */
-module.exports = class AtomApplication extends EventEmitter {
+Taking a look at the `AtomApplication` class found in `src/main-process/atom-application.js`, we can see one instance of the code not adhereing to this principle. Taking a look at the class declaration, we can see that the code utilizes inheritance for the `AtomApplication` and extends the node.js [`EventEmitter`](https://nodejs.dev/learn/the-nodejs-event-emitter) class. According to the open-closed principle, classes should be open for extension but closed for modification. Although the class is being extended as intended, we can see in the `AtomApplication`'s constructor that this subclass makes internal modifications to how the class is structured.
+<pre><code>// lines 194-212
+constructor (options) {
+  StartupTime.addMarker('main-process:atom-application:constructor:start');
+
+  super();
+  this.quitting = false;
+  this.quittingForUpdate = false;
+  this.getAllWindows = this.getAllWindows.bind(this);
+  this.getLastFocusedWindow = this.getLastFocusedWindow.bind(this);
+  this.resourcePath = options.resourcePath;
+  this.devResourcePath = options.devResourcePath;
+  this.version = options.version;
+  this.devMode = options.devMode;
+  this.safeMode = options.safeMode;
+  this.logFile = options.logFile;
+  this.userDataDir = options.userDataDir;
+  this._killProcess = options.killProcess || process.kill.bind(process);
+  this.waitSessionsByWindow = new Map();
+  this.windowStack = new WindowStack();
   ...
-  handleEvents() {
-    // lines 568 - 571
-    this.on('application:quit', () => app.quit());
-    this.on('application:new-window', () =>
-      this.openPath(createOpenSettings({})
-    );
-    // lines 793 - 799
-    this.disposable.add(
-      ipcHelpers.on(app, 'activate', (event, hasVisibleWindows) => {
-        if (hasVisibleWindows) return;
-        if (event) event.preventDefault();
-        this.emit('application:new-window');
-      })
-    );
-  }
+}
+</code></pre>
+In addition to inheriting the parent class' constructor with a call to `super()`, the `AtomApplication` class initializes and assigns more fields. This inheritance of the parent's constructor as well as the internal modification introduces inevitable complications if the `EventEmitter`'s constructor were to ever be modified. The `super()` call in the subclass will automatically inherit those changes and therefore require someone to go into every subclass of the parent and apply changes to their constructors as well. This is especially prevalent with the `EventEmitter` class as it is extended upon and it's constructor called upon with `super()` within various other important classes such as the `AutoUpdater`, `AutoUpdateManager`, and `AtomWindow` classes.
+
+<br>
+
+Similarly, we can see the same problem with the `Model` class located in `src/model.coffee` and two of its subclasses `Project` in `src/project.js` and `Workspace` in `src/workspace.js`. Looking at the constructors for bothe of these subclasses we can see the same calls to `super()` as well as additional fields being declared/added.
+<pre><code>/* project.js => lines 21-31 */
+constructor ({
+  notificationManager,
+  packageManager,
+  config,
+  applicationDelegate,
+  grammarRegistry
+}) {
+  super();
+  this.notificationManager = notificationManager;
+  this.applicationDelegate = applicationDelegate;
+  this.grammarRegistry = grammarRegistry;
+  ...
+}
+</code></pre>
+<pre><code>/* workspace.js => lines 177-185 */
+constructor(params) {
+  super(...arguments);
+
+  this.updateWindowTitle = this.updateWindowTitle.bind(this);
+  this.updateDocumentEdited = this.updateDocumentEdited.bind(this);
+  this.didDestroyPaneItem = this.didDestroyPaneItem.bind(this);
+  this.didChangeActivePaneOnPaneContainer = this.didChangeActivePaneOnPaneContainer.bind(
+    this
+  );
   ...
 }
 </code></pre>
 
-<br>
-
-Another instance of adherence to the open-closed principle can be seen with the `Model` class located in `src/model.coffee` and two of it's subclasses `Project` and `Workspace`. Similar to how the `AtomApplication` mentioned above extends the `EventEmitter` class, these three subclasses build upon the functionality of the `Model` class and utilize the functionality provided in the it such as the constructor through the use of the `super()` method which calls the parent class constructor within their own constructor that performs additional work. Rather than modify existing methods, these two subclasses simply add functionality with additional methods.
+Extending the `Model` class, both subclasses take advantage of the fact that the parent class is open for extension but falters when it comes to respecting that the class is closed for modification by adding new fields within their constructors and changing the structure of the classes. Calling `super()`, these subclasses make themselves vulnerable to potential changes in the `Model` class and it's structure which would require going into these subclasses and modifying them to fit with the parent class' new structure.
 
 <br>
 
@@ -197,7 +340,7 @@ we see that the method contract is not broken between the superclass and subclas
 <br>
 
 <h3>Dependency Inversion Principle</h3>
-The <strong>Dependency Inversion Principle</strong> is the last principle from the SOLID list. This principle focuses on reducing coupling between modules and states that both low and high-level components/classes should depend on abstractions rather than each other. The following three rules encompass the heuristics of this principle—Subclasses do not <strong>hold a reference to a concrete class</strong>, <strong>derive from a conrete class</strong>, or <strong>override implemented methods</strong>.
+Finally, the <strong>Dependency Inversion Principle</strong> is the last principle from the SOLID list. This principle focuses on reducing coupling between modules and states that both low and high-level components/classes should depend on abstractions rather than each other. The following three rules encompass the heuristics of this principle—Subclasses do not <strong>hold a reference to a concrete class</strong>, <strong>derive from a conrete class</strong>, or <strong>override implemented methods</strong>.
 
 <br>
 
@@ -206,6 +349,10 @@ Revisiting the `Package` and `ThemePackage` classes from earlier we can say that
 <br>
 
 Similarly, we can see that the `Model` class and its subclasses also suffer from the same shortcomings. As mentioned earlier, the `Cursor` class overrides the `Model`'s `destroy()` method which violates one of the principle's heuristics. Additionally, the `Model` is not an abstract class which means that its subclasses `Cursor`, `Workspace`, and `Project` all do not abide by this principle.
+
+<br>
+
+<h2>System Improvement</h2>
 
 <br>
 
