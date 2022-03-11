@@ -170,8 +170,6 @@ While the function name does express that it is measuring something, it does not
 
 <br>
 
-and the `Notification` class in `src/notification.js`.
-
 Another portion of the code that adheres to this principle includes the `NotificationManager` class found in `src/notification-manager.js`. Similar to the examples shown with the `Package` class, this class has various methods with names that are very self explanatory and provide insight as to their specific responsibilities. The two most prevalent examples in this class are function names starting with `on` to describe functions that handle callbacks
 <pre><code>// lines 25-27
 onDidAddNotification(callback) {
@@ -318,7 +316,7 @@ disable() {
   this.config.removeAtKeyPath('core.themes', this.name);
 }
 </code></pre>
-These `unshiftAtKeyPath`, `pushAtKeyPath`, and `removeAtKeyPath` methods (defined in `src/config.js`) all return some value at the end. While the `enable()` and `disable()` functions in the `Package` class return these values, the variants in the `ThemePackage` class do not and are `void` functions. This in turn violates the Liskov Susbtitution Principle.
+These `unshiftAtKeyPath`, `pushAtKeyPath`, and `removeAtKeyPath` methods (defined in `src/config.js`) all return some value at the end. While the `enable()` and `disable()` functions in the `Package` class return these values, the variants in the `ThemePackage` class do not and are `void` functions. This in turn violates the Liskov Substitution Principle.
 
 <br>
 
