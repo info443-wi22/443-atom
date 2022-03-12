@@ -8,18 +8,11 @@ Mainly Developed by GitHub, Atom is a desktop application built using web techno
 
 You can find more information about the overall structure of Atom at [Atom and Packages](https://github.com/atom/atom/blob/master/CONTRIBUTING.md) and more details at [Atom Flight Manual](https://flight-manual.atom.io/). And [atom/atom](https://github.com/atom/atom) is the repository we claim to analyze.
 
-## Development View
-atom/atom is the core repository that responsible for basic text editing.
-
-<img src="img/UML_Component_Diagram.jpeg" alt="UML Diagram" width=50% height=50%>
-
-<em>Figure 1: UML Component Diagram</em>
-<p>&nbsp;</p>
 
 ## Development View
 atom/atom is the core repository that responsible for basic text editing.
 
-<img src="img/UML_Component_Diagram.jpeg" alt="UML Diagram" width=70% height=70%>
+<img src="img/UML_Component_Diagram.jpeg" alt="UML Diagram" width=80% height=80%>
 
 <em>Figure 1: UML Component Diagram</em>
 <p>&nbsp;</p>
