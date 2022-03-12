@@ -16,22 +16,32 @@ atom/atom is the core repository that responsible for basic text editing.
 <em>Figure 1: UML Component Diagram</em>
 <p>&nbsp;</p>
 
+## Development View
+atom/atom is the core repository that responsible for basic text editing.
+
+<img src="img/UML_Component_Diagram.jpeg" alt="UML Diagram" width=70% height=70%>
+
+<em>Figure 1: UML Component Diagram</em>
+<p>&nbsp;</p>
+
 ### Dependency Identity
 Begin from the left of Figure (Figure 1: UML Diagram),
 Menu component, which handles thing in application menu, requires packageManager that is used to coordinate the lifecycle of Atom packages to set up. Package component contains core packages that help to build the system.
 It provides packageManager interface to Menu and Text Editor. And it requires grammarRegistry provided by Grammar component, which contains one or more grammars, and styleManager from Style Component, which can query and observe the set of active styles. Notification is a component that holds notices for instructions and it provides notifivationManager, which used to create notifications to be shown to users, to Package、Pane、and Environment component. The main function of Deserializer component is to covert data and paralle interface in both way. Here, it gives out deserializerManager to Package、Pane、and Environment component. Providing paneContainer to Workspace and requiring viewRegistry from View and applicationDelegate from Delegate, Pane is used to help user spliting the pane for better texting. And paneContainer presents content in the center of the workspace. View deal with the data presentation and interaction from user. And for View component, the viewRegistry handles the connection between model and view. It provides viewRegistry to Package、Pane and Workspace. In addtion, Workspace shows the status of window of user interface. Back to View, it receives applicationEnvironment of Environment component that indirectly charges main components like Window, Menu and so on. Except components mentioned before, Environment also provide interface to Window. Window itself presents the open page of Atom. It requires applicationEnvironment of Environment and applicationDelegate of Delegate. Finally Delegate implements events and callbacks like event listener. And it provides applicationDelegate to Pane、Window and Environment. Last but not least, it involves Electron, a framework help to build app, from outside package.
 
 ### Codeline Model
-The names of files and directories are rather descriptive. For example, folder src holds the main source files and spec keeps testing code of basically all corresponding components. And file names are easy to understand at a glance since they are named as 'component-status' although files that set up a component cannot be extract and put in a folder seperately. However, it allows programmers to use relative paths because all files that call each other to work are put in the same directory.
+The names of files and directories are rather descriptive. For example, folder `src` holds the main source files and `spec` keeps testing code of basically all corresponding components. And file names are easy to understand at a glance since they are named as 'component-status' although files that set up a component cannot be extract and put in a folder seperately. However, it allows programmers to use relative paths because all files that call each other to work are put in the same directory.
 
 Many functionalities of Atom are achieved by packages. And like atom/atom repository, it only contains things to do with core part of basic text editing which means it seperates packages into other repositories and relates them by links. It enables a highly flexible developing approach, where changes in single packages will not affect other functionalities. In addition, Atom allows packages to depend on other packages, substituding the redundant work with simple dependency statement.
 
 It has a quite detailed README.md for for the main repository but lack explainations for other important folders.
 
 ### Testing and Configuration
-The Atom core is tested by about 80 files containing test code, not including the large amount of fixtures used as test cases. These files with test code are again almost entirely bundled into one folder named `spec`, corresponding to each component. Atom is tested using the [Jasmine](https://jasmine.github.io/) testing framework. Jasmine is a open-source test framework that can be run on any JavaScript-enabled platform. It has a clean and simple syntax for writing test in spec file and then you just need to make the source file available to spec file.
+The core of Atom is tested by about 80 files that contains test code, not including the large amount of fixtures used as test cases. These files with test code are almost placed into a folder named `spec`, corresponding to each files in `src`. Atom is tested using the [Jasmine](https://jasmine.github.io/) testing framework. Jasmine is a open-source test framework that can be run on any JavaScript-enabled platform. It has a clean and simple syntax for writing test and then you just need to make the source file available to spec file. Atom use Jasmine 1.3 to run the test by default, but it also allows you to run custom test runner by `atomTestRunner` in `package.json`.
 
-And Atom uses Continuous Integration tools like [GitHub Actions](https://github.com/features/actions), [Travis CI](https://travis-ci.org/) and [Appveyor](https://www.appveyor.com/) to do a test build for each new pull request, including running the entire test suite. Pull requests merged almost all by others than pull request initiator, which gurantees the code be checked before merge.
+Tests in `spec` will normally all be run to make sure each unit work correctly and independently and all units play their parts as expectation when intergrated. We run tests to verify whether the componets give out the desired result and whether they invoke certain function.
+
+And Atom uses Continuous Integration tools like [GitHub Actions](https://github.com/features/actions), [Travis CI](https://travis-ci.org/) and [Appveyor](https://www.appveyor.com/). They will help to atomatically build and run tests for each new push request and report error immediately. Every commited revision triggers CI tools to work. Then, Pull requests merged almost all by others than pull request initiator, which gurantees the code be checked before merge. 
 
 
 ## Applied Perspective
@@ -190,7 +200,7 @@ Next we assessed the architecture of the Atom project, identfiying instances whe
 
 <br>
 
-<h3>Model In Code Principle</h3>
+### Model In Code Principle
 The <strong>Model In Code Principle</strong> is exactly what its name suggests. This principle states that the code itself should express the model and reveal the design intent of the component or architecture. One of the ways code may be written to adhere to this principle is with the way that parts of the code is named. Some general guidelines include the following—<strong>classes</strong> should be named with <i>nouns</i>, <strong>attributes</strong> with <i>nouns</i> that <i>describe adjectives</i>, and <strong>methods</strong> with <i>verbs</i> that connect classes.
 
 <br>
@@ -286,7 +296,7 @@ Zooming out, we can also see how the classes interact with eachother from just t
 
 <br>
 
-<h3>Principle of Separation of Concerns</h3>
+### Principle of Separation of Concerns
 The <strong>Principle of Separation of Concerns</strong> states that software should be organized in a way that decreases cohesion and coupling meaning that the elements should be as independent as possible. This principle helps to reduce various anti-patterns from arising in the code.
 
 <br>
@@ -299,7 +309,7 @@ We can also see a decent application of separation of concerns with the elements
 
 <br>
 
-<h3>Open-Closed Principle</h3>
+### Open-Closed Principle
 The <strong>Open-Closed Principle</strong> is the second of the SOLID design principles in object oriented programming and states that classes should be open for extension but closed for modification. By promoting extensibility in this way, we can prevent any errors or bugs from arisiing from adding any new functionality that can come from modifying lower-level components directly.
 
 <br>
@@ -365,7 +375,7 @@ Extending the `Model` class, both subclasses take advantage of the fact that the
 
 <br>
 
-<h3>Liskov Substitution Principle</h3>
+### Liskov Substitution Principle
 The <strong>Liskov Substitution Principle</strong> is the next principle following the Open-Closed Principle in the SOLID acronym. This principle states that any superclasses should be able to be replaced by any of its subclasses without breaking the program. Adhereing to this principle not only improves the maintainability of code by preventing the need to have instance of checks to handle specific subclasses differently, but also increases code reusability by using a more standardized model throughout the super and subclasses.
 
 <br>
@@ -420,7 +430,7 @@ we see that the method contract is not broken between the superclass and subclas
 
 <br>
 
-<h3>Dependency Inversion Principle</h3>
+### Dependency Inversion Principle
 Finally, the <strong>Dependency Inversion Principle</strong> is the last principle from the SOLID list. This principle focuses on reducing coupling between modules and states that both low and high-level components/classes should depend on abstractions rather than each other. The following three rules encompass the heuristics of this principle—Subclasses do not <strong>hold a reference to a concrete class</strong>, <strong>derive from a conrete class</strong>, or <strong>override implemented methods</strong>.
 
 <br>
@@ -433,7 +443,7 @@ Similarly, we can see that the `Model` class and its subclasses also suffer from
 
 <br>
 
-<h2>System Improvement</h2>
+## System Improvement
 
 <br>
 
