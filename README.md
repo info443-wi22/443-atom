@@ -25,7 +25,7 @@ It provides packageManager interface to Menu and Text Editor. And it requires gr
 ### Codeline Model
 The names of files and directories are rather descriptive. For example, folder `src` holds the main source files and `spec` keeps testing code of basically all corresponding components. And file names are easy to understand at a glance since they are named as 'component-status' although files that set up a component cannot be extract and put in a folder seperately. However, it allows programmers to use relative paths because all files that call each other to work are put in the same directory.
 
-Many functionalities of Atom are achieved by packages. And like atom/atom repository, it only contains things to do with core part of basic text editing which means it seperates packages into other repositories and relates them by links. It enables a highly flexible developing approach, where changes in single packages will not affect other functionalities. In addition, Atom allows packages to depend on other packages, substituding the redundant work with simple dependency statement.
+Many functionalities of Atom are achieved by packages. And like atom/atom repository, it only contains things to do with core part of basic text editing which means it seperates packages into other repositories and relates them by links. It enables a highly flexible developing approach, where changes in single packages will not affect other functionalities. In addition, Atom allows packages to depend on other packages, substituding the redundant work with simple dependency statement. Moreover, for implement  version control in Atom, the root directory needs to relate the Git repository.
 
 It has a quite detailed README.md for for the main repository but lack explainations for other important folders.
 
@@ -517,5 +517,5 @@ Similarly, we can see that the `Model` class and its subclasses also suffer from
 - [Atom Package CI Scripts](https://github.com/atom/ci)
 - Bottema, Rowan et al. "Atom · Delft Students On Software Architecture: DESOSA 2016". Delftswa.Gitbooks.Io, 2016, https://delftswa.gitbooks.io/desosa2016/content/atom/chapter.html.
 - Rozenski, Nick. "Software Systems Architecture: Working with Stakeholders Using Viewpoints and Perspectives." Second Edition, Chapter 29, Addison-Wesly Professional, 2012, https://learning.oreilly.com/library/view/software-systems-architecture/9780132906135/ch29.html
-
+- Kolodiy, Sergey. "Unit Tests, How To Write Testable Code And Why It Matters". Toptal Engineering Blog, https://www.toptal.com/qa/how-to-write-testable-code-and-why-it-matters.
 
