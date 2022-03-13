@@ -50,14 +50,14 @@ You can find more information about the overall structure of Atom at [Atom and P
 |   :---:   |  :---:  |
 | viewRegistry | provides information to the workspace how your model objects should be presented in the DOM |
 | packageManager | allows packages to be loaded, activated, deactivated, and unloaded |
-| paneContainer| checks status and manapulate activities for each item in `Pane` |
-| applicationEnvironment | checks status in `Window` |
+| paneContainer| checks status and manapulate activities for each item in Pane |
+| applicationEnvironment | checks status in Window |
 | applicationDelegate | checks for different settings on the workspaces like Pane, Window, and Environment |
 | deserializerManager | manages the deserializers used for serialized state |
 | notificationManager | check the status of notifications and keep track of them |
 | styleManager | clone and attach style elements in different contexts |
 | grammarRegistry | holds the grammars used for tokenizing |
-| textEditorRegistry | tracks registered `TextEditors` |
+| textEditorRegistry | tracks registered TextEditor |
 
 <br>
 <p align="center"><i>Table: Description of Interfaces</i></p>
