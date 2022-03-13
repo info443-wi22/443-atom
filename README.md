@@ -17,6 +17,24 @@ atom/atom is the core repository that responsible for basic text editing.
 <em>Figure 1: UML Component Diagram</em>
 <p>&nbsp;</p>
 
+
+| Component | Description | Purpose |
+|   :---:   |  :---:  | :---: |
+| View | deal with the data presentation and interaction from user | provides viewRegistry to Package, Pane, and Workspace |
+| Package | loads and activates a package's main module and resources such as stylesheets, keymaps, grammar, editor properties, and menus | provides packageManager interface to Menu and Text Editor |
+| Workspace | shows the status of window of user interface | interact with this object to open files, be notified of current and future editors, and manipulate panes. To |
+| Pane | a container for presenting content in the center of the workspace; contains multiple items, one of which is active at a given time | provides paneContainer to Workspce only and requiring viewRegistry from View and applicationDelegate from Delegate, Pane is used to help user spliting the pane for better texting |
+| Environment | Atom global for dealing with packages, themes, menus, and the window | provides interface to Window |
+| Window | presents the open page of Atom | requires `applicationEnvironment` of Environment and `applicationDelegate` of Delegate |
+| Delegate | implements events and callbacks like event listener | provides `applicationDelegate` to Pane、Window and Environment |
+| Deserializer | coverts data and paralle interface | provides `deserializerManager` to Package、Pane、and Environment component |
+| Menu | handles application menu | `requires for packageManager that is used to coordinate the lifecycle of Atom packages to set up` |
+| Notification | A notification to the user containing a message and type | provides notifivationManager, used to create notifications to be shown to the user, Package, Pane, and Environment component.  |
+| Style | globally query and observe the set of active style sheets | is subscribed to styleManager by individual <atom-styles> elements, which clone and attach style elements in different contexts |
+| Grammar | tokenizes lines of text | should not be instantiated directly but instead obtained from a GrammarRegistry |
+| Text Editor | represents all essential editing state for a single TextBuffer, including cursor and selection positions, folds, and soft wraps | manipulats the state of an editor |
+
+
 ### Dependency Identity
 Begin from the left of Figure (Figure 1: UML Diagram),
 Menu component, which handles thing in application menu, requires packageManager that is used to coordinate the lifecycle of Atom packages to set up. Package component contains core packages that help to build the system.
