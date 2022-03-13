@@ -106,13 +106,13 @@ If you are an UI/UX designer, this may seem crazy to you that software architect
 <ol>
 <li>Interface evaluation</li>
 
-For the first activitivity, we identified places where users interact with the system and how users will interact at this point. 
+For the first activity, we identified places where users interact with the system and how users will interact at this point. 
 - From the Component Diagram(Figure 1), View Registry is where the users interact and control the system from the Interface, acting as a bridge between frontend and backend. With that being said, users are mainly interacting with Workspace, Pane, and Package. In addition to that, the application environment also is an Atom global that deals with packages, themes, menus, and the window.
   - Pane - A container in the center workspace, and it also includes displaying the file tabs. 
   - Package - Both the system loads the packages, and the user active packages that builds up the whole program, including, stylesheet, keymaps, grammar, editor properties, and menus.
   - Workspace / Environment - The user interface of the entire window, where users interact with the whole Atom environment, that is anything besides editing the pane, like menu, theme, file, window, clipboard, notification, toolbar, etc.
 
-Next, we focused on the perceived usability concern, specifically how the system return responses to the user for asynchronous opepration at each point if applicable.
+Next, we focused on the perceived usability concern, specifically how the system return responses to the user for asynchronous operation at each point if applicable.
 
 Most text editors like Atom do not require access to networks, so there is no feedback to users in the Workspace, Pane, and Environment in either online or offline mode because it works fine in both modes. However, when it comes to download packages, there is feedback for being unable to download packages without networks. 
 
@@ -172,7 +172,7 @@ Besides making changes to the color theme, users are not capable of modifying th
 
 
 <li>Particiatory design</li>
-For the third activity, we identified different user’s capability of using the system and what their needs are. In this case, we considered mainly developers, who are very experienced in using text editor and do not need any traning. We also considered students who have various skill level and coding background, from newbie to advanced. 
+For the third activity, we identified different user’s capability of using the system and what their needs are. In this case, we considered mainly developers, who are very experienced in using text editor and do not need any training. We also considered students who have various skill level and coding background, from newbie to advanced. 
 
 - Developers
   - Developers should be very familiar with using text editors like Atom. They are able to use command lines to manipulate different files, moving around interfaces and abundant files, installing packages and extensions, and finally publishing the program/system. 
@@ -198,7 +198,7 @@ Then, based on most user’s needs for using Atom, we sketch out a process flow 
 ## Styles & Patterns
 ### Styles
 1.  Pipe and filter: main > Start  > application > initialize application window > Atom-environment
-  The startup process utilizes the pipe and filter style where the filters are the different classes in the sequence. The chain of startup starts with src/main-process/main.js which gets the values of the resourcePath(where everything is located), devResourcePath(where the github repo is), and the startTime. These values are all piped into to start.js which normalizes them and adds the path of the file that the user is editing, it then pipes the values to atom-application.js. This gets information about the current instance of the application and pipes the information about the current window into multiple files, the main one being src/initialize-application-window.js which uses the data to display the application to the user and is the end of the pipe.
+  The startup process utilizes the pipe and filter style where the filters are the different classes in the sequence. The chain of startup starts with src/main-process/main.js which gets the values of the resourcePath(where everything is located), devResourcePath(where the GitHub repo is), and the startTime. These values are all piped into to start.js which normalizes them and adds the path of the file that the user is editing, it then pipes the values to atom-application.js. This gets information about the current instance of the application and pipes the information about the current window into multiple files, the main one being src/initialize-application-window.js which uses the data to display the application to the user and is the end of the pipe.
 
 2. Model view Controller
   The main component of the application can be best described as a Model-View-Controller. The model in this instance is the file that is being viewed/edited by the user which is not a part of the core atom system. The view is the process in pane.js, this file is called on by atom-environment.js which allows the user to see the text that they are editing. Finally, the controller is the text editor (text-editor.js) which modifies the text file directly.
@@ -320,7 +320,7 @@ Then, based on most user’s needs for using Atom, we sketch out a process flow 
 <br>
 
 ## Architectural Assessment
-Next we assessed the architecture of the Atom project, identfiying instances where various design principles were adhered to and not within the code.
+Next we assessed the architecture of the Atom project, identifying instances where various design principles were adhered to and not within the code.
 
 <br>
 
@@ -353,7 +353,7 @@ getMenuPaths() {
   }
 }
 </code></pre>
-as well as functions starting with `has` for those returning a boolean value indicating whether something is present or not
+as well as functions starting with `has` for those returning a boolean value indicating whether something is present or not.
 <pre><code>// lines 966-983
 hasActivationHooks() {
   const hooks = this.getActivationHooks();
@@ -374,7 +374,7 @@ hasActivationCommands() {
   return false;
 }
 </code></pre>
-These function names describe exactly what they are doing and therefore does not require any other reader to look too deep into the code in order to understand it. This increases the overall ease of use when it comes to maintaining and modifying the existing code. One example of a function whose code does not express the model is the `measure()` function -
+These function names describe exactly what they are doing and therefore does not require any other reader to look too deep into the code in order to understand it. This increases the overall ease of use when it comes to maintaining and modifying the existing code. One example of a function whose code does not express the model is the `measure()` function.
 <pre><code> // lines 80-85
 measure(key, fn) {
   const startTime = window.performance.now();
@@ -383,11 +383,11 @@ measure(key, fn) {
   return value;
 }
 </code></pre>
-While the function name does express that it is measuring something, it does not specify what exactly it is measuring which leads to ambiguity about it's functionality. Looking at the code that utilizes this function, we can see that it is generally used to measure the amount of time a given action takes to be completed/load. This is something that could not be inferred from the function's name itself even looking at the class name.
+While the function name does express that it is measuring something, it does not specify what exactly it is measuring which leads to ambiguity about its functionality. Looking at the code that utilizes this function, we can see that it is generally used to measure the amount of time a given action takes to be completed/load. This is something that could not be inferred from the function's name itself even looking at the class name.
 
 <br>
 
-Another portion of the code that adheres to this principle includes the `NotificationManager` class found in `src/notification-manager.js`. Similar to the examples shown with the `Package` class, this class has various methods with names that are very self explanatory and provide insight as to their specific responsibilities. The two most prevalent examples in this class are function names starting with `on` to describe functions that handle callbacks
+Another portion of the code that adheres to this principle includes the `NotificationManager` class found in `src/notification-manager.js`. Similar to the examples shown with the `Package` class, this class has various methods with names that are very self explanatory and provide insight as to their specific responsibilities. The two most prevalent examples in this class are function names starting with `on` to describe functions that handle callbacks.
 <pre><code>// lines 25-27
 onDidAddNotification(callback) {
   return this.emitter.on('did-add-notification', callback);
@@ -416,7 +416,7 @@ addNotification(notification) {
   return notification;
 }
 </code></pre>
-Zooming out, we can also see how the classes interact with eachother from just their names alone. For example, we can correctly infer that the `NotificationManager` class manages the `Notification` class by collecting the various instances of `Notification` and displaying them and their statuses.
+Zooming out, we can also see how the classes interact with each other from just their names alone. For example, we can correctly infer that the `NotificationManager` class manages the `Notification` class by collecting the various instances of `Notification` and displaying them and their statuses.
 
 <br>
 
@@ -425,7 +425,7 @@ The <strong>Principle of Separation of Concerns</strong> states that software sh
 
 <br>
 
-Going back to the `NotificationManager` and `Notification` classes, we can say that this small section of the code does adhere to this principle. The separations between these two classes are intentional and work together without the need for inheritance which results in decreased coupling and cohesion. There are no `super()` calls that would result in strong coupling between the two and both classes strictly share the overarching responsbility of handling notifications. Separating the specific concerns related to notification prevents the possibility of any God class/objects in the code. This code smell consists of a class that does or knows too much and is very large with lots of functionality which results in tight coupling and increased cohesion. Although having a manager that instantiates notifications introduces some coupling between the two, the overall structure of these two classes work to decrease any more than is needed.
+Going back to the `NotificationManager` and `Notification` classes, we can say that this small section of the code does adhere to this principle. The separations between these two classes are intentional and work together without the need for inheritance which results in decreased coupling and cohesion. There are no `super()` calls that would result in strong coupling between the two and both classes strictly share the overarching responsibility of handling notifications. Separating the specific concerns related to notification prevents the possibility of any God class/objects in the code. This code smell consists of a class that does or knows too much and is very large with lots of functionality which results in tight coupling and increased cohesion. Although having a manager that instantiates notifications introduces some coupling between the two, the overall structure of these two classes work to decrease any more than is needed.
 
 <br>
 
@@ -434,11 +434,11 @@ We can also see a decent application of separation of concerns with the elements
 <br>
 
 ### Open-Closed Principle
-The <strong>Open-Closed Principle</strong> is the second of the SOLID design principles in object oriented programming and states that classes should be open for extension but closed for modification. By promoting extensibility in this way, we can prevent any errors or bugs from arisiing from adding any new functionality that can come from modifying lower-level components directly.
+The <strong>Open-Closed Principle</strong> is the second of the SOLID design principles in object oriented programming and states that classes should be open for extension but closed for modification. By promoting extensibility in this way, we can prevent any errors or bugs from arising from adding any new functionality that can come from modifying lower-level components directly.
 
 <br>
 
-Taking a look at the `AtomApplication` class found in `src/main-process/atom-application.js`, we can see one instance of the code not adhereing to this principle. Taking a look at the class declaration, we can see that the code utilizes inheritance for the `AtomApplication` and extends the node.js [`EventEmitter`](https://nodejs.dev/learn/the-nodejs-event-emitter) class. According to the open-closed principle, classes should be open for extension but closed for modification. Although the class is being extended as intended, we can see in the `AtomApplication`'s constructor that this subclass makes internal modifications to how the class is structured.
+Taking a look at the `AtomApplication` class found in `src/main-process/atom-application.js`, we can see one instance of the code not adhering to this principle. Taking a look at the class declaration, we can see that the code utilizes inheritance for the `AtomApplication` and extends the node.js [`EventEmitter`](https://nodejs.dev/learn/the-nodejs-event-emitter) class. According to the open-closed principle, classes should be open for extension but closed for modification. Although the class is being extended as intended, we can see in the `AtomApplication`'s constructor that this subclass makes internal modifications to how the class is structured.
 <pre><code>// lines 194-212
 constructor (options) {
   StartupTime.addMarker('main-process:atom-application:constructor:start');
@@ -465,7 +465,7 @@ In addition to inheriting the parent class' constructor with a call to `super()`
 
 <br>
 
-Similarly, we can see the same problem with the `Model` class located in `src/model.coffee` and two of its subclasses `Project` in `src/project.js` and `Workspace` in `src/workspace.js`. Looking at the constructors for bothe of these subclasses we can see the same calls to `super()` as well as additional fields being declared/added.
+Similarly, we can see the same problem with the `Model` class located in `src/model.coffee` and two of its subclasses `Project` in `src/project.js` and `Workspace` in `src/workspace.js`. Looking at the constructors for both of these subclasses we can see the same calls to `super()` as well as additional fields being declared/added.
 <pre><code>/* project.js => lines 21-31 */
 constructor ({
   notificationManager,
@@ -495,16 +495,16 @@ constructor(params) {
 }
 </code></pre>
 
-Extending the `Model` class, both subclasses take advantage of the fact that the parent class is open for extension but falters when it comes to respecting that the class is closed for modification by adding new fields within their constructors and changing the structure of the classes. Calling `super()`, these subclasses make themselves vulnerable to potential changes in the `Model` class and it's structure which would require going into these subclasses and modifying them to fit with the parent class' new structure.
+Extending the `Model` class, both subclasses take advantage of the fact that the parent class is open for extension but falters when it comes to respecting that the class is closed for modification by adding new fields within their constructors and changing the structure of the classes. Calling `super()`, these subclasses make themselves vulnerable to potential changes in the `Model` class and its structure which would require going into these subclasses and modifying them to fit with the parent class' new structure.
 
 <br>
 
 ### Liskov Substitution Principle
-The <strong>Liskov Substitution Principle</strong> is the next principle following the Open-Closed Principle in the SOLID acronym. This principle states that any superclasses should be able to be replaced by any of its subclasses without breaking the program. Adhereing to this principle not only improves the maintainability of code by preventing the need to have instance of checks to handle specific subclasses differently, but also increases code reusability by using a more standardized model throughout the super and subclasses.
+The <strong>Liskov Substitution Principle</strong> is the next principle following the Open-Closed Principle in the SOLID acronym. This principle states that any superclasses should be able to be replaced by any of its subclasses without breaking the program. Adhering to this principle not only improves the maintainability of code by preventing the need to have instance of checks to handle specific subclasses differently, but also increases code reusability by using a more standardized model throughout the super and subclasses.
 
 <br>
 
-One portion of the code that does not abide by this principle can be found with the `Package` class located in `src/package.js` and the `ThemePackage` class located in `src/theme-package.js`. At first glance, it seems as if these two classes are true to the Liskov Substitution Principle, the `ThemePackage` subclass properly extending the `Package` class and utilizing its superclass's constructor, not placing any stricker validation rules on it's input parameters which would cause failures when substituting. Most of the methods in the `Package` class are also used as is when handling the `ThemePackage` class. Additionally, looking at the `src/package-manager.js` file, we can see that the Atom application seems to use these classes interchangably -
+One portion of the code that does not abide by this principle can be found with the `Package` class located in `src/package.js` and the `ThemePackage` class located in `src/theme-package.js`. At first glance, it seems as if these two classes are true to the Liskov Substitution Principle, the `ThemePackage` subclass properly extending the `Package` class and utilizing its superclass's constructor, not placing any strict validation rules on it's input parameters which would cause failures when substituting. Most of the methods in the `Package` class are also used as is when handling the `ThemePackage` class. Additionally, looking at the `src/package-manager.js` file, we can see that the Atom application seems to use these classes interchangeably.
 <pre><code>// lines 613-614
 pack = metadata.theme ? new ThemePackage(options) : new Package(options);
 pack.preload();
@@ -537,7 +537,7 @@ These `unshiftAtKeyPath`, `pushAtKeyPath`, and `removeAtKeyPath` methods (define
 
 <br>
 
-On the other hand, we can refer to the `Model` class in `src/model.coffee` mentioned earlier to see an example of code that adheres to the Liskov Substitution Principle. Looking at this superclass code as well as the code for three of its subclasses—`Cursor`, `Workspace`, and `Project`—we can see that the subclasses generally use the base methods provided by the superclass while adding additional functionality. Unlike the `Workspace` and `Project` classes, the `Cursor` project overrides the `destroy()` method. Although this causes a problem with the `Package` and `ThemePackage` classes due to their specific implementations, the `Cursor` and `Model` classes still abide by the Liskov Substitution Principle. Looking at the implementation of `destroy()` in `src/cursor.js` -
+On the other hand, we can refer to the `Model` class in `src/model.coffee` mentioned earlier to see an example of code that adheres to the Liskov Substitution Principle. Looking at this superclass code as well as the code for three of its subclasses—`Cursor`, `Workspace`, and `Project`—we can see that the subclasses generally use the base methods provided by the superclass while adding additional functionality. Unlike the `Workspace` and `Project` classes, the `Cursor` project overrides the `destroy()` method. Although this causes a problem with the `Package` and `ThemePackage` classes due to their specific implementations, the `Cursor` and `Model` classes still abide by the Liskov Substitution Principle. Looking at the implementation of `destroy()` in `src/cursor.js`.
 <pre><code>// lines 22-24
 destroy() {
   this.marker.destroy();
@@ -567,24 +567,24 @@ Similarly, we can see that the `Model` class and its subclasses also suffer from
 
 <br>
 
-## System Improvement
 
+## System Improvement
 Our final step in our overall system analysis for the Atom application was making various changes to the code, ranging from smaller refactoring steps to more significant changes in class relationships. But since we don't have the access of testing file and there are some errors occur as we install and run tester command, we are not able to verify the execution of our changes.
 
 <br>
 
-1. Refactored the `Package` class in `package.js` and `ThemePackage` class in `theme-package.js` to refer to a new abstract class called `AbstractPackage` in `abstract-package.js`. As the `ThemePackage`, which extended the `Package` class, did not modify the constructor we added the constructor from the `Package` to our new `AbstractPackage`. Similarly, we moved the methods from the `Package` class that were not overriden by the `ThemePackage` into the `AbstractPackage` without any further modifications. For the methods that were overriden by the `ThemePackage` (`getType()`, `getStyleSheetPriority()`, `enable()`, `disable()`, `preload()`, `finishloading()`, `load()`, and `activate()`), we added the outlines for the methods to our `AbstractPackage` class. These methods were then overriden in the `Package` and `ThemePackage` classes which extended the `AbstractClass` to implement their own unique versions of these methods. This was done in order for the classes to be inline with the <i>Liskov Substitution Principle</i>, as mentioned previousely. The change increases the substitutability of the classes when they are used and more accurately reflects the nature of the class
+1. Refactored the `Package` class in `package.js` and `ThemePackage` class in `theme-package.js` to refer to a new abstract class called `AbstractPackage` in `abstract-package.js`. As the `ThemePackage`, which extended the `Package` class, did not modify the constructor we added the constructor from the `Package` to our new `AbstractPackage`. Similarly, we moved the methods from the `Package` class that were not overrode by the `ThemePackage` into the `AbstractPackage` without any further modifications. For the methods that were overrode by the `ThemePackage` (`getType()`, `getStyleSheetPriority()`, `enable()`, `disable()`, `preload()`, `finishloading()`, `load()`, and `activate()`), we added the outlines for the methods to our `AbstractPackage` class. These methods were then overrode in the `Package` and `ThemePackage` classes which extended the `AbstractClass` to implement their own unique versions of these methods. This was done in order for the classes to be inline with the <i>Liskov Substitution Principle</i>, as mentioned previously. The change increases the substitutability of the classes when they are used and more accurately reflects the nature of the class.
 2. With [Martin's definitions of refactoring steps](https://refactoring.com/catalog/) in mind, we addressed the issue mentioned in the <i>Model in Code Principle</i> portion of the architecture assessment with the `measure()` function in the `Package` and `ThemePackage` classes. After looking deeper into the code to gain a better understanding of what exactly the function is measuring, we renamed the function to be `measureLoadTime()` as the function measures the amount of time a certain task takes to complete. We then changed the code utilizing this function in `theme-package.js`, `package.js`, and our new `abstract-package.js` to reflect the new change.
 
-3. Martins's "Clean Code" discusses how code does not need comments in order to be readable, in fact there are many times when developers leave comments on code that are completely uncessary for readability. The developers of Atom were no exception to this, we were able to identify and remove a variety of different comments that were unecessary.
+3. Martins's "Clean Code" discusses how code does not need comments in order to be readable, in fact there are many times when developers leave comments on code that are completely unnecessary for readability. The developers of Atom were no exception to this, we were able to identify and remove a variety of different comments that were unnecessary.
   
     <strong>3a.</strong> In `command-registry.js` there were commented out lines of code consisting of type declarations for `Listener` and `CommandDescriptor` on lines 148-152, 427-430, and 458-461 that had not been removed. Although this may seem to be a small change, unused lines of code have no place in a production application environment. For a developer who is first trying to read through this code, these commented out functions could be confusing and make reading through the file more difficult.
   
-    <strong>3b.</strong> The second type of comments that we removed were redundant comments, there were quite a few of these in the Atom source code. These were likely created because it is open source and therefore writtent by a variety of people with different coding styles, so some methods had comments and some didn't. We were able to remove redundant comments on lines 1226, 1255, 1349, and 1658 of `text-editor.js` and line 34 of `config-file.js`. 
+    <strong>3b.</strong> The second type of comments that we removed were redundant comments, there were quite a few of these in the Atom source code. These were likely created because it is open source and therefore written by a variety of people with different coding styles, so some methods had comments and some didn't. We were able to remove redundant comments on lines 1226, 1255, 1349, and 1658 of `text-editor.js` and line 34 of `config-file.js`. 
 
 <br>
 
-These changes can be viewed in [our fork](https://github.com/choijos/atom) of the Atom github repository. Overall, we believe that these changes and report as a whole fall in line with the various principles, architectural guidelines, and patterns presented in this course. We also believe that this process of analyzing the Atom application code and writing a report has helped us gain a deeper appreciation and understanding of software architecture as a whole.
+These changes can be viewed in [our fork](https://github.com/choijos/atom) of the Atom GitHub repository. Overall, we believe that these changes and report as a whole fall in line with the various principles, architectural guidelines, and patterns presented in this course. We also believe that this process of analyzing the Atom application code and writing a report helped us gain a deeper appreciation and understanding of software architecture as a whole.
 
 <br>
 
