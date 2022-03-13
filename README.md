@@ -28,12 +28,12 @@ You can find more information about the overall structure of Atom at [Atom and P
 |   :---:   |  :---:  | :---: |
 | View | deal with the data presentation and interaction from user | provides viewRegistry to Package, Pane, and Workspace; requires atomEnvironemnt of Environment |
 | Package | loads and activates a package's main module and resources such as stylesheets, keymaps, grammar, editor properties, and menus | provides packageManager interface to Menu and Text Editor |
-| Workspace | interact with this object to open files, be notified of current and future editors, and manipulate panes| requires viewRegistry from View and paneContainer from Pane |
-| Pane | a container for presenting content in the center of the workspace; contains multiple items, one of which is active at a given time | provides paneContainer to Workspce only and requires viewRegistry from View, applicationDelegate from Delegate, notificationManager from Notification and deserializerManager of Deserializer|
-| Environment | Atom global for dealing with packages, themes, menus, and the window | provides interface to Window |
+| Workspace | interact with this object to open files, be notified of current and future editors, and manipulates panes| requires viewRegistry from View and paneContainer from Pane |
+| Pane | a container for presenting content in the center of the workspace; contains multiple items, one of which is active at a given time | provides paneContainer to Workspace only and requires viewRegistry from View, applicationDelegate from Delegate, notificationManager from Notification and deserializerManager of Deserializer|
+| Environment | globally dealing with packages, themes, menus, and the window | provides interface to Window |
 | Window | presents the open page of Atom | requires applicationEnvironment of Environment and applicationDelegate of Delegate |
 | Delegate | implements events and callbacks like event listener | provides applicationDelegate to Pane、Window and Environment |
-| Deserializer | coverts data and paralle interface | provides deserializerManager to Package、Pane、and Environment component |
+| Deserializer | coverts data and parallel interface | provides deserializerManager to Package、Pane、and Environment component |
 | Menu | handles application menu | requires for packageManager of Package |
 | Notification | A notification to the user containing a message and type | provides notificationManager, which is used to create notifications and show to the user, to Package, Pane, and Environment component|
 | Style | globally query and observe the set of active style sheets | provides styleManager to Package component |
@@ -41,7 +41,8 @@ You can find more information about the overall structure of Atom at [Atom and P
 | Text Editor | represents all essential editing state for a single TextBuffer, including cursor and selection positions, folds, and soft wraps | requires packageManager from Package |
 
 <br>
-<p align="center"><i>Table: Description of Components</i></p>
+<p align="center"><strong>Table 1: Brief Descriptions of Components</strong></p>
+<p align="center"><i>Table of the major components in the Atom application</i></p>
 <p>&nbsp;</p>
 
 <br>
@@ -50,17 +51,18 @@ You can find more information about the overall structure of Atom at [Atom and P
 |   :---:   |  :---:  |
 | viewRegistry | provides information to the workspace how your model objects should be presented in the DOM |
 | packageManager | allows packages to be loaded, activated, deactivated, and unloaded |
-| paneContainer| checks status and manapulate activities for each item in Pane |
+| paneContainer| checks status and manipulate activities for each item in Pane |
 | applicationEnvironment | checks status in Window |
 | applicationDelegate | checks for different settings on the workspaces like Pane, Window, and Environment |
 | deserializerManager | manages the deserializers used for serialized state |
-| notificationManager | check the status of notifications and keep track of them |
-| styleManager | clone and attach style elements in different contexts |
+| notificationManager | checks the status of notifications and keep track of them |
+| styleManager | clones and attaches style elements in different contexts |
 | grammarRegistry | holds the grammars used for tokenizing |
 | textEditorRegistry | tracks registered TextEditor |
 
 <br>
-<p align="center"><i>Table: Description of Interfaces</i></p>
+<p align="center"><strong>Table 2: Brief Descriptions of Interfaces</strong></p>
+<p align="center"><i>Table of interfaces provided and required of those main components</i></p>
 <p>&nbsp;</p>
 
 
@@ -69,20 +71,20 @@ Beginning from the left of Figure 1: UML Diagram, Menu component requires packag
 <br>
 
 ### Codeline Model
-The names of files and directories are rather descriptive. For example, folder `src` holds the main source files and `spec` keeps testing code of basically all corresponding components. And file names are easy to understand at a glance since they are named as 'component-status' although files that set up a component cannot be extract and put in a folder seperately. However, it allows programmers to use relative paths because all files that call each other to work are put in the same directory.
+The names of files and directories are rather descriptive. For example, folder `src` holds the main source files and `spec` keeps testing code of basically all corresponding components. And file names are easy to understand at a glance since they are named as 'component-status' although files that set up a whole component cannot be extracted and put in an independent folder. However, it allows programmers to use relative paths because all files that call each other to work are put in the same directory.
 
 Many functionalities of Atom are achieved by packages. And like atom/atom repository, it only contains things to do with core part of basic text editing which means it seperates packages into other repositories and relates them by links. It enables a highly flexible developing approach, where changes in single packages will not affect other functionalities. In addition, Atom allows packages to depend on other packages, substituding the redundant work with simple dependency statement. Moreover, for implement  version control in Atom, the root directory needs to relate the Git repository.
 
-It has a quite detailed README.md for for the main repository but lack explainations for other important folders.
+Fianlly, although atom/atom has a quite detailed README.md for for the main repository, it lacks explanations for other important folders.
 
 <br>
 
 ### Testing and Configuration
-The core of Atom is tested by about 80 files that contains test code, not including the large amount of fixtures used as test cases. These files with test code are almost placed into a folder named `spec`, corresponding to each files in `src`. Atom is tested using the [Jasmine](https://jasmine.github.io/) testing framework. Jasmine is a open-source test framework that can be run on any JavaScript-enabled platform. It has a clean and simple syntax for writing test and then you just need to make the source file available to `spec` file. Atom use Jasmine 1.3 to run the test by default, but it also allows you to run custom test runner by `atomTestRunner` in `package.json`.
+The core of Atom is tested by about 80 files that contain test code, not including the large amount of fixtures used as test cases. These files with test code are almost placed into a folder named `spec`, corresponding to each files in `src`. Atom is tested by [Jasmine](https://jasmine.github.io/) testing framework. Jasmine is an open-source test framework that can be run on any JavaScript-enabled platform. It has a clean and simple syntax for writing test and then you just need to make the source file available to `spec` file. Atom use Jasmine 1.3 to run the test by default, but it also allows you to run custom test runner by `atomTestRunner` in `package.json`.
 
-Tests in `spec` will normally all be run to make sure each unit work correctly and independently and all units play their parts as expectation when intergrated. We run tests to verify whether the componets give out the desired result and whether they invoke certain function.
+Tests in `spec` will normally all be run to make sure each unit work correctly and independently, and all units play their parts as expectation when integrated. We run tests to verify whether the components give out the desired result and whether they invoke certain function.
 
-And Atom uses Continuous Integration tools like [GitHub Actions](https://github.com/features/actions), [Travis CI](https://travis-ci.org/) and [Appveyor](https://www.appveyor.com/). They will help to atomatically build and run tests for each new push request and report error immediately. Every commited revision triggers CI tools to work. Then, Pull requests merged almost all by others than pull request initiator, which gurantees the code be checked before merge. 
+Atom uses Continuous Integration tools like [GitHub Actions](https://github.com/features/actions), [Travis CI](https://travis-ci.org/) and [Appveyor](https://www.appveyor.com/). They will help to automatically build and run tests for each new push request and report error immediately. Every committed revision triggers CI tools to work. In addition, pull requests merged almost all by others other than pull request initiator, which guarantees the code can be checked before merge.
 
 <br>
 
