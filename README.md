@@ -24,36 +24,47 @@ You can find more information about the overall structure of Atom at [Atom and P
 
 ### Dependency Identity
 
-| Component | Description | Purpose |
+| Component | Description | Interface |
 |   :---:   |  :---:  | :---: |
-| View | deal with the data presentation and interaction from user | provides viewRegistry to Package, Pane, and Workspace |
-| viewRegistry | a view provider, handles the association between model and view types in Atom | provides information to the workspace how your model objects should be presented in the DOM |
+| View | deal with the data presentation and interaction from user | provides viewRegistry to Package, Pane, and Workspace; requires atomEnvironemnt of Environment |
 | Package | loads and activates a package's main module and resources such as stylesheets, keymaps, grammar, editor properties, and menus | provides packageManager interface to Menu and Text Editor |
-| packageManager | coordinating the lifecycle of Atom packages | allows packages to be loaded, activated, deactivated, and unloaded |
-| Workspace | shows the status of window of user interface | interact with this object to open files, be notified of current and future editors, and manipulate panes|
-| Pane | a container for presenting content in the center of the workspace; contains multiple items, one of which is active at a given time | provides paneContainer to Workspce only and requiring viewRegistry from View and applicationDelegate from Delegate, Pane is used to help user spliting the pane for better texting |
-| paneContainer| checks status and manapulate activities for each item in `Pane` | x |
+| Workspace | interact with this object to open files, be notified of current and future editors, and manipulate panes| requires viewRegistry from View and paneContainer from Pane |
+| Pane | a container for presenting content in the center of the workspace; contains multiple items, one of which is active at a given time | provides paneContainer to Workspce only and requires viewRegistry from View, applicationDelegate from Delegate, notificationManager from Notification and deserializerManager of Deserializer|
 | Environment | Atom global for dealing with packages, themes, menus, and the window | provides interface to Window |
-| applicationEnvironment | checks status in `Window` | x |
-| Window | presents the open page of Atom | requires `applicationEnvironment` of Environment and `applicationDelegate` of Delegate |
-| Delegate | implements events and callbacks like event listener | provides `applicationDelegate` to Pane、Window and Environment |
-| applicationDelegate | checks for different settings on the workspaces like Pane, Window, and Environment | x |
-| Deserializer | coverts data and paralle interface | provides `deserializerManager` to Package、Pane、and Environment component |
-| deserializerManager | manages the deserializers used for serialized state | x |
-| Menu | handles application menu | requires for packageManager that is used to coordinate the lifecycle of Atom packages to set up |
-| Notification | A notification to the user containing a message and type | instantiated in notificationManager, used to create notifications to be shown to the user, Package, Pane, and Environment component|
-| notificationManager | creates and collects Notifications to be shown to the user | provides a single place from which to check on the status of notifications and keep track of them |
-| Style | globally query and observe the set of active style sheets | is subscribed to styleManager by individual <atom-styles> elements |
-| styleManager | clone and attach style elements in different contexts | x |
-| Grammar | tokenizes lines of text | should not be instantiated directly but instead obtained from a GrammarRegistry |
-| grammarRegistry | holds the grammars used for tokenizing | x |
-| Text Editor | represents all essential editing state for a single TextBuffer, including cursor and selection positions, folds, and soft wraps | manipulats the state of an editor |
-| textEditorRegistry | tracks registered `TextEditors` | x |
+| Window | presents the open page of Atom | requires applicationEnvironment of Environment and applicationDelegate of Delegate |
+| Delegate | implements events and callbacks like event listener | provides applicationDelegate to Pane、Window and Environment |
+| Deserializer | coverts data and paralle interface | provides deserializerManager to Package、Pane、and Environment component |
+| Menu | handles application menu | requires for packageManager of Package |
+| Notification | A notification to the user containing a message and type | provides notificationManager, which is used to create notifications and show to the user, to Package, Pane, and Environment component|
+| Style | globally query and observe the set of active style sheets | provides styleManager to Package component |
+| Grammar | tokenizes lines of text | should not be instantiated directly but instead obtained from a GrammarRegistry and provides GrammarRegistry as interface|
+| Text Editor | represents all essential editing state for a single TextBuffer, including cursor and selection positions, folds, and soft wraps | requires packageManager from Package |
 
-<p align="center"><strong>x = N/A</strong></p>
+<br>
+<p align="center"><i>Table: Description of Components</i></p>
+<p>&nbsp;</p>
+
+<br>
+
+| Interface | Description |
+|   :---:   |  :---:  |
+| viewRegistry | provides information to the workspace how your model objects should be presented in the DOM |
+| packageManager | allows packages to be loaded, activated, deactivated, and unloaded |
+| paneContainer| checks status and manapulate activities for each item in `Pane` |
+| applicationEnvironment | checks status in `Window` |
+| applicationDelegate | checks for different settings on the workspaces like Pane, Window, and Environment |
+| deserializerManager | manages the deserializers used for serialized state |
+| notificationManager | check the status of notifications and keep track of them |
+| styleManager | clone and attach style elements in different contexts |
+| grammarRegistry | holds the grammars used for tokenizing |
+| textEditorRegistry | tracks registered `TextEditors` |
+
+<br>
+<p align="center"><i>Table: Description of Interfaces</i></p>
+<p>&nbsp;</p>
 
 
-Begin from the left of Figure 1: UML Diagram, Menu component requires packageManager. Package component contains core packages that help to build the system. It provides packageManager interface to Menu and Text Editor. And it requires grammarRegistry provided by Grammar component, which contains one or more grammars, and styleManager from Style Component. Notification provides notificationManager, which used to create notifications to be shown to users, to Package, Pane, and Environment component. The main function of Deserializer component is to covert data and paralle interface in both way. Here, it gives out deserializerManager to Package, Pane, and Environment component. Providing paneContainer to Workspace and requiring viewRegistry from View and applicationDelegate from Delegate, Pane is used to help user spliting the pane for better texting.  For View component, the viewRegistry handles the connection between model and view, and provides viewRegistry to Package, Pane, and Workspace. Back to View, it receives applicationEnvironment of Environment component that indirectly charges main components like Window, Menu and so on. Except components mentioned before, Environment also provide interface to Window. Window itself presents the open page of Atom. It requires applicationEnvironment of Environment and applicationDelegate of Delegate. Finally Delegate implements events and callbacks like event listener. And it provides applicationDelegate to Pane,Window, and Environment. Last but not least, it involves Electron, a framework help to build app, from outside package.
+Beginning from the left of Figure 1: UML Diagram, Menu component requires packageManager. Package component contains core packages that help to build the system. It provides packageManager interface to Menu and Text Editor. And it requires grammarRegistry provided by Grammar component, which contains one or more grammars, and styleManager from Style Component. Notification component provides notificationManager, which checks the status of notifications and keep track of them, to Package, Pane, and Environment component. The main function of Deserializer component is to covert data and paralle interface in both ways. Here, it gives out deserializerManager to Package, Pane, and Environment component. Providing paneContainer to Workspace and requiring viewRegistry from View and applicationDelegate from Delegate, Pane is used to help user split the pane for better texting. For View component, it provides viewRegistry to Package, Pane, and Workspace. Back to View, it receives applicationEnvironment of Environment component that indirectly charges main components like Window, Menu and so on. Except components mentioned before, Environment also provides interface to Window. Window itself presents the open page of Atom. It requires applicationEnvironment of Environment and applicationDelegate of Delegate. Finally Delegate implements events and callbacks like event listener. And it provides applicationDelegate to Pane, Window, and Environment. Last but not least, it involves Electron, a framework help to build app, from outside package.
 
 <br>
 
@@ -67,7 +78,7 @@ It has a quite detailed README.md for for the main repository but lack explainat
 <br>
 
 ### Testing and Configuration
-The core of Atom is tested by about 80 files that contains test code, not including the large amount of fixtures used as test cases. These files with test code are almost placed into a folder named `spec`, corresponding to each files in `src`. Atom is tested using the [Jasmine](https://jasmine.github.io/) testing framework. Jasmine is a open-source test framework that can be run on any JavaScript-enabled platform. It has a clean and simple syntax for writing test and then you just need to make the source file available to spec file. Atom use Jasmine 1.3 to run the test by default, but it also allows you to run custom test runner by `atomTestRunner` in `package.json`.
+The core of Atom is tested by about 80 files that contains test code, not including the large amount of fixtures used as test cases. These files with test code are almost placed into a folder named `spec`, corresponding to each files in `src`. Atom is tested using the [Jasmine](https://jasmine.github.io/) testing framework. Jasmine is a open-source test framework that can be run on any JavaScript-enabled platform. It has a clean and simple syntax for writing test and then you just need to make the source file available to `spec` file. Atom use Jasmine 1.3 to run the test by default, but it also allows you to run custom test runner by `atomTestRunner` in `package.json`.
 
 Tests in `spec` will normally all be run to make sure each unit work correctly and independently and all units play their parts as expectation when intergrated. We run tests to verify whether the componets give out the desired result and whether they invoke certain function.
 
