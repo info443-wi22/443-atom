@@ -24,7 +24,7 @@ You can find more information about the overall structure of Atom at [Atom and P
 
 ### Dependency Identity
 
-| Component | Description | Interface |
+| Component | Description | Dependency |
 |   :---:   |  :---:  | :---: |
 | View | deal with the data presentation and interaction from user | provides viewRegistry to Package, Pane, and Workspace; requires atomEnvironemnt of Environment |
 | Package | loads and activates a package's main module and resources such as stylesheets, keymaps, grammar, editor properties, and menus | provides packageManager interface to Menu and Text Editor |
