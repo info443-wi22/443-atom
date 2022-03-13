@@ -46,20 +46,93 @@ If you are an UI/UX designer, this may seem crazy to you that software architect
 
 ### Concerns
 <ul>
-<li>The first concern relevant to Atom system architecture is how well the <strong>perceived usability</strong> is. The instances we will be focusing on for this concern is the use of asynchronous operation of the system because for code editor like Atom, we want the use to: 1. receive the transactions returned before it has completed in the database, “providing significant improvements in observed response time”. (Rozenski) 2. operate local systems that continue in offline mode, meaning that users are able to use the editor even if the network is off. </li>
-<li>Furthermore, not only for Atom but most software systems need to consider how easy it is for changing the user interfaces because according to Rozenski, “<strong>the difficulty of changing user interfaces</strong> can impact system’s usability”. To make changing the UI easier, we need to consider if the Atom system has a modification friendly architecture so the developers and maintainers could easily make routine modifications based on user feedback, especially Atom is maintained by the Gtihub community, so it is crucial to evaluate how ease for the community to change the UI on Atom system. </li>
-<li>The third perspective we will consider in the Atom system is the <strong>simple process flow</strong>. Since Atom involves different types of users, including companies, developers, students, etc. that are doing different tasks, meanwhile each task may involve complex and multiple steps, lile preview, terminal, opening files and folders, coding… Therefore, the “process flow around the system should be simple, understandable, and consistent”. (Rozenski)  By checking the system process flow, we will ensure that Atom is sufficient and straightforward for users to complete the tasks.</li>
+<li>The first concern relevant to Atom system architecture is how well the <strong>perceived usability</strong> is. The instances we will be focusing on for this concern is the use of asynchronous operation of the system because for code editors like Atom, we want the use to: 1. receive the transactions returned before it has completed in the database, “providing significant improvements in observed response time”. (Rozenski) 2. operate local systems that continue in offline mode, meaning that users are able to use the editor even if the network is off. </li>
+<li>Furthermore, not only for Atom but most software systems need to consider how easy it is for changing the user interfaces because according to Rozenski, “<strong>the difficulty of changing user interfaces</strong> can impact system’s usability”. To make changing the UI easier, we need to consider if the Atom system has a modification friendly architecture so the developers and maintainers could easily make routine modifications based on user feedback, especially Atom is maintained by the Github community, so it is crucial to evaluate how ease for the community to change the UI on Atom system. </li>
+<li>The third perspective we will consider in the Atom system is the <strong>simple process flow</strong>. Since Atom involves different types of users, including developers, students that are doing different tasks, meanwhile each task may involve complex and multiple steps, like preview, terminal, opening files and folders, coding… Therefore, the “process flow around the system should be simple, understandable, and consistent”. (Rozenski)  By checking the system process flow, we will ensure that Atom is sufficient and straightforward for users to complete the tasks.</li>
 </ul>
 
 ### Activities To Apply The Perspective
 <ol>
 <li>Interface evaluation</li>
-Identify places where users interact with the system(maybe using our UML diagram) and how users will interact at this point.
-Then focusing on the perceived usability concern, specifically how the system return responses to the user and checking for asynchronous working each point if applicable.
-Understanding the internal system and public interfaces, and how easy it is to modify the user interfaces in the system.
+
+For the first activitivity, we identified places where users interact with the system and how users will interact at this point. 
+- From the Component Diagram(Figure 1), View Registry is where the users interact and control the system from the Interface, acting as a bridge between frontend and backend. With that being said, users are mainly interacting with Workspace, Pane, and Package. In addition to that, the application environment also is an Atom global that deals with packages, themes, menus, and the window.
+  - Pane - A container in the center workspace, and it also includes displaying the file tabs. 
+  - Package - Both the system loads the packages, and the user active packages that builds up the whole program, including, stylesheet, keymaps, grammar, editor properties, and menus.
+  - Workspace / Environment - The user interface of the entire window, where users interact with the whole Atom environment, that is anything besides editing the pane, like menu, theme, file, window, clipboard, notification, toolbar, etc.
+
+Next, we focused on the perceived usability concern, specifically how the system return responses to the user for asynchronous opepration at each point if applicable.
+
+Most text editors like Atom do not require access to networks, so there is no feedback to users in the Workspace, Pane, and Environment in either online or offline mode because it works fine in both modes. However, when it comes to download packages, there is feedback for being unable to download packages without networks. 
+
+<img src="img/message1.png" alt="UML Diagram" width=90% height=80%>
+
+<em>Figure 2: Message for unable to install packages</em>
+
+<img src="img/message2.png" alt="UML Diagram" width=90% height=80%>
+
+<em>Figure 3: Output for the error message</em>
+
+To expand on package feedback, we could look at package.js in atom/src. This class is responsible for installing packages and resources like keymaps, stylesheet, gramma, etc., meanwhile it handles the error cases where packages cannot load as expected. For example, this portion of the code in package.js checks for if the package can be loaded from the metadata, and throws errors if it fails to load due to many factors like connectivity. 
+
+<pre><code>load() {
+  this.measure('loadTime', () => {
+    try {
+      ModuleCache.add(this.path, this.metadata);
+
+      this.loadKeymaps();
+      this.loadMenus();
+      this.loadStylesheets();
+      this.registerDeserializerMethods();
+      this.activateCoreStartupServices();
+      this.registerURIHandler();
+      this.registerTranspilerConfig();
+      this.configSchemaRegisteredOnLoad = this.registerConfigSchemaFromMetadata();
+      this.settingsPromise = this.loadSettings();
+      if (this.shouldRequireMainModuleOnLoad() && this.mainModule == null) {
+        this.requireMainModule();
+      }
+    } catch (error) {
+      this.handleError(`Failed to load the ${this.name} package`, error);
+    }
+  });
+  return this;
+}</code></pre>
+
+<br>
+
+We also perform the second activity to understand the internal system and public interfaces, and how easy it is to modify the user interfaces in the system.
+
+In Atom's Github, there is a `static` folder. After looking at the `ui` folders, we believe that Atom uses **HTML** and **LESS** framework to generate its interfaces. LESS, is a superset of CSS, that is widely used in Atom systems, especially for how it allows the user to change themes in their interface through different packages. It is highly reusable and requires less effort to make changes to the stylesheets. Inside of the static file, there are many LESS files that serve as stylesheets to the UI components on the Atom interfaces. Meanwhile in the packages file, there are many preloaded themes, such as dark and light themes. Inside of those files, the LESS is overwritten the default stylesheet, so that the user would be able to modify the theme by loading packages. With that also being said, the user could make their own theme!  Based on the below instruction, the user would be able to use LESS framework template, added to the repo and modify the stylesheet. However, it requires some background of CSS and LESS framework in order to implement custom theme. 
+
+
+<img src="img/theme.png" alt="UML Diagram" width=90% height=80%>
+
+<em>Figure 4: Precedure to custmize theme</em>
+
+In `package/dev-live-reload`, this module watches any change in the LESS files and applies them to all the files synchronously. 
+
+Besides making changes to the color theme, users are not capable of modifying the html elements and components on their own because there is no open source for HTML elements. That is on the internal system where only the developers of Atom could see and modify.
+
+
 <li>Particiatory design</li>
-Understand different user’s capability of using the system and what their needs are.
-Then based on their needs, find out the simplicity of the process flow for different users.
+For the third activity, we identified different user’s capability of using the system and what their needs are. In this case, we considered mainly developers, who are very experienced in using text editor and do not need any traning. We also considered students who have various skill level and coding background, from newbie to advanced. 
+
+- Developers
+  - Developers should be very familiar with using text editors like Atom. They are able to use command lines to manipulate different files, moving around interfaces and abundant files, installing packages and extensions, and finally publishing the program/system. 
+  - Atom should accommodate users to move through many large files and folders. 
+- Students
+  - Students' capabilities are from different levels, from newbies to masters. They are using Atom for school works and projects, and need to publish the work to submit assignments. 
+  - Atom should provide basic tutorials for students to get started on using a text editor. There should be explanations on packages, syntax, and provide suggestions on coding input, local path, debugging, etc.
+
+<br>
+
+Then, based on most user’s needs for using Atom, we sketch out a process flow for basic coding users. See Figure 5. This diagram has multiple points where fulfill different needs like if the users are newbie or previous users, if the users want to modify the work environment including themes, packages, etc., what if the installation of packages fails, and if they want to publish or save to local. We believe that for newbie coders, the process flow is very simple and does not involve too much package manipulation, that is mainly work in offline mode most of the time. The more package installation involves, the more needs for connection with back end metadata so it complex the workflow process. 
+
+<img src="img/workflow.png" alt="UML Diagram" width=100%>
+
+<em>Figure 5: Process flow diagram</em>
+
 </ol>
 
 <br>
@@ -441,6 +514,8 @@ Similarly, we can see that the `Model` class and its subclasses also suffer from
 <br>
 
 ## References
-- Rozenski, Nick. "Software Systems Architecture: Working with Stakeholders Using Viewpoints and Perspectives." Second Edition, Chapter 29, Addison-Wesly Professional, 2012, https://learning.oreilly.com/library/view/software-systems-architecture/9780132906135/ch29.html
-- Bottema, Rowan et al. "Atom · Delft Students On Software Architecture: DESOSA 2016". Delftswa.Gitbooks.Io, 2016, https://delftswa.gitbooks.io/desosa2016/content/atom/chapter.html.
 - [Atom Package CI Scripts](https://github.com/atom/ci)
+- Bottema, Rowan et al. "Atom · Delft Students On Software Architecture: DESOSA 2016". Delftswa.Gitbooks.Io, 2016, https://delftswa.gitbooks.io/desosa2016/content/atom/chapter.html.
+- Rozenski, Nick. "Software Systems Architecture: Working with Stakeholders Using Viewpoints and Perspectives." Second Edition, Chapter 29, Addison-Wesly Professional, 2012, https://learning.oreilly.com/library/view/software-systems-architecture/9780132906135/ch29.html
+
+
