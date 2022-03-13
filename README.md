@@ -65,11 +65,11 @@ Next, we focused on the perceived usability concern, specifically how the system
 
 Most text editors like Atom do not require access to networks, so there is no feedback to users in the Workspace, Pane, and Environment in either online or offline mode because it works fine in both modes. However, when it comes to download packages, there is feedback for being unable to download packages without networks. 
 
-<img src="img/message1.png" alt="UML Diagram" width=90% height=80%>
+<img src="img/Message1.png" alt="Error Message" width=90% height=80%>
 
 <em>Figure 2: Message for unable to install packages</em>
 
-<img src="img/message2.png" alt="UML Diagram" width=90% height=80%>
+<img src="img/Message2.png" alt="Error Message Expand" width=90% height=80%>
 
 <em>Figure 3: Output for the error message</em>
 
@@ -106,7 +106,7 @@ We also perform the second activity to understand the internal system and public
 In Atom's Github, there is a `static` folder. After looking at the `ui` folders, we believe that Atom uses **HTML** and **LESS** framework to generate its interfaces. LESS, is a superset of CSS, that is widely used in Atom systems, especially for how it allows the user to change themes in their interface through different packages. It is highly reusable and requires less effort to make changes to the stylesheets. Inside of the static file, there are many LESS files that serve as stylesheets to the UI components on the Atom interfaces. Meanwhile in the packages file, there are many preloaded themes, such as dark and light themes. Inside of those files, the LESS is overwritten the default stylesheet, so that the user would be able to modify the theme by loading packages. With that also being said, the user could make their own theme!  Based on the below instruction, the user would be able to use LESS framework template, added to the repo and modify the stylesheet. However, it requires some background of CSS and LESS framework in order to implement custom theme. 
 
 
-<img src="img/theme.png" alt="UML Diagram" width=90% height=80%>
+<img src="img/theme.png" alt="Steps to change theme" width=90% height=80%>
 
 <em>Figure 4: Precedure to custmize theme</em>
 
@@ -129,7 +129,7 @@ For the third activity, we identified different user’s capability of using the
 
 Then, based on most user’s needs for using Atom, we sketch out a process flow for basic coding users. See Figure 5. This diagram has multiple points where fulfill different needs like if the users are newbie or previous users, if the users want to modify the work environment including themes, packages, etc., what if the installation of packages fails, and if they want to publish or save to local. We believe that for newbie coders, the process flow is very simple and does not involve too much package manipulation, that is mainly work in offline mode most of the time. The more package installation involves, the more needs for connection with back end metadata so it complex the workflow process. 
 
-<img src="img/workflow.png" alt="UML Diagram" width=100%>
+<img src="img/workflow.png" alt="Process flow diagram" width=100%>
 
 <em>Figure 5: Process flow diagram</em>
 
