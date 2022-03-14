@@ -171,7 +171,7 @@ In `package/dev-live-reload`, this module watches any change in the LESS files a
 Besides making changes to the color theme, users are not capable of modifying the html elements and components on their own because there is no open source for HTML elements. That is on the internal system where only the developers of Atom could see and modify.
 
 
-<li>Particiatory design</li>
+<li>Participatory design</li>
 For the third activity, we identified different user’s capability of using the system and what their needs are. In this case, we considered mainly developers, who are very experienced in using text editor and do not need any training. We also considered students who have various skill level and coding background, from newbie to advanced. 
 
 - Developers
